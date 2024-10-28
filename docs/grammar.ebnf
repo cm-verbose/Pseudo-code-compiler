@@ -1,0 +1,76 @@
+# Significant whitespace 
+wsp ::= " "; 
+
+# Operators
+operator_add ::= "+";
+operator_variable_value ::= "="; 
+operator_substract ::= "-";
+operator_multiply ::= "*";
+operator_divide ::= "/";
+operator_modulo ::= "%";
+operator_greater ::= "<";
+operator_greater_or_equal ::= "<=";
+operator_smaller ::= ">"; 
+operator_smaller_or_equal ::= ">="; 
+operator_assign ::= "<-";
+operator_comma ::= ","; 
+operator_comparative_equal ::= "égale"            # ==
+operator_comparative_not_equal ::= "n'égale pas"; # !=
+operator_colon ::= ":"; 
+
+# Grouping 
+group_paren_left ::= "(";
+group_paren_right ::= ")";
+
+# Keywords
+kw_and ::= "ET";
+kw_do ::= "FAIRE";
+kw_else ::= "SINON";
+kw_for ::= "POUR";
+kw_if ::= "SI";
+kw_if_end ::= "ALORS";
+kw_or ::= "OU";
+kw_not ::= "NOT";
+kw_switch ::= "SELON";
+kw_switch_case ::= "CAS"; 
+kw_switch_default_case ::= "AUTRE"
+kw_read ::= "LIRE";
+kw_while ::= "TANTQUE";
+kw_write ::= "ECRIRE";
+kw_kw_end ::= "FIN";
+
+# Composed keywords
+kw_if_else ::= kw_else, wsp, kw_if;          # SINON SI
+kw_for_end ::= kw_kw_end, wsp, kw_for;       # FIN POUR 
+kw_switch_end ::= kw_kw_end, wsp, kw_switch; # FIN SELON
+kw_while_end ::= kw_kw_end, wsp, kw_while;   # FIN TANTQUE
+
+
+# Numbers
+digit ::= "0"
+  | "1"
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9";
+
+number ::= digit digit; 
+float ::= number, ".", number;
+
+# Types
+type_integer ::= "entier";
+type_real ::= "réel"; 
+type_string ::= "chaine"; 
+type_boolean ::= "bool"; 
+
+
+# Program and variable separation
+program_separator ::= 3 * "_"; 
+
+#
+# Operations 
+#
