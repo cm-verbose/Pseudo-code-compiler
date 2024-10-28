@@ -14,7 +14,7 @@ impl PseudoCodeCompiler {
     PseudoCodeCompiler {
       code: String::new(),
       ptr: 0,
-      tokens: vec![],
+      tokens: Vec::new(),
       reserved: vec![
         "AUTRE", "ALORS", "CAS", "ECRIRE", "ET", "FAIRE", "FIN", "LIRE", "NOT", "OU", "POUR", "SI",
         "SINON", "TANTQUE", "TYPE",
@@ -26,6 +26,7 @@ impl PseudoCodeCompiler {
 
   /* Compile code to a target language (hopefully) */
   pub fn compile(&mut self, code: String) -> &Vec<Token> {
+    self.reset();
     let tokens: &Vec<Token> = self.lex(code);
     return tokens;
   }
@@ -41,15 +42,15 @@ impl PseudoCodeCompiler {
         break;
       };
 
-      let current_char: &char = cur.unwrap();
+      let current_char: char = *cur.unwrap();
       match current_char {
         '<' => {
           if let Some(sequence) = self.peek(2) {
             if sequence == "<-" || sequence == "<=" {
-              self.ptr += 1; 
+              self.ptr += 1;
               self.tokens.push(Token::Operator(sequence))
             } else if self.peek(1).unwrap() == "<" {
-              self.tokens.push(Token::Operator("<".to_string())); 
+              self.tokens.push(Token::Operator("<".to_string()));
             }
           }
         }
@@ -82,7 +83,7 @@ impl PseudoCodeCompiler {
       }
 
       /* Indentifiers */
-      if current_char.is_alphabetic() || *current_char == '_' {
+      if current_char.is_alphabetic() || current_char == '_' {
         let mut identifier: String = String::new();
 
         /* yikes! */
@@ -130,13 +131,13 @@ impl PseudoCodeCompiler {
         }
 
         if point_count > 1 {
-          panic!("{} is an invalid number", number);
+          panic!("{} is an invalid number, since it contains multiple dots", number);
         }
         self.tokens.push(Token::Number(number));
       }
 
       /* Strings */
-      if *current_char == '\"' {
+      if current_char == '\"' {
         let mut string: String = String::new();
         self.ptr += 1;
         while code_chars.get(self.ptr).is_some() && *code_chars.get(self.ptr).unwrap() != '\"' {
@@ -145,17 +146,22 @@ impl PseudoCodeCompiler {
         }
         self.tokens.push(Token::String(string));
       }
-
       self.ptr += 1;
     }
 
     return &self.tokens;
   }
 
+  /* Resets the state of the compiler (for each compilation) */
+  fn reset(&mut self) {
+    self.code = String::new();
+    self.ptr = 0;
+  }
+
   /* Look fowards in the string (from current position) */
-  fn peek(&self, n: usize) -> Option<String> {
+  fn peek(&self, peek_length: usize) -> Option<String> {
     let range_start: usize = self.ptr + 2;
-    let range_end: usize = range_start + n;
+    let range_end: usize = range_start + peek_length;
 
     if range_end >= self.code.len() && range_start <= self.code.len() {
       None
