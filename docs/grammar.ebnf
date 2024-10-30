@@ -69,7 +69,7 @@ type_boolean ::= "bool";
 
 
 # Program and variable separation
-program_separator ::= 3 * "_"; 
+program_separator ::= 5 * "_"; 
 
 #
 # Operations 
