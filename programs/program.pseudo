@@ -1,6 +1,0 @@
-SI 8 >= 4 ALORS
-  8 <- 5 
-  SI 9 > 4 
-    9 + 2 
-  FIN SI 
-FIN SI

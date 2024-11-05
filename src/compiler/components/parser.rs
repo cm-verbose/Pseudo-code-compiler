@@ -1,4 +1,4 @@
-use crate::language_features::{SyntaxTree, Token};
+use crate::language_features::{SyntaxTree, Token, TokenType};
 
 pub struct Parser {
   tree: SyntaxTree,
@@ -14,11 +14,16 @@ impl Parser {
   }
 
   /* Construct an abstract syntax tree from the provided tokens */
-  pub fn parse(&mut self, tokens: &Vec<Token>) {
-    println!("{:?}", self.tree); 
+  pub fn parse(&mut self, tokens: &Vec<Token>) -> &SyntaxTree {
     while let Some(token) = tokens.get(self.ptr) {
-      println!("{:?}", token); 
+      match token.token_type {
+        TokenType::COLON => {
+
+        }
+        _ => {}
+      }
       self.ptr += 1;
     }
+    return &self.tree; 
   }
 }

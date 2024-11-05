@@ -16,13 +16,13 @@ impl Tokenizer {
       line: 0,
       ptr: 0,
       tokens: Vec::new(),
-      keywords: HashMap::new()
+      keywords: HashMap::new(),
     }
   }
 
   pub fn tokenize(&mut self, code: &String) -> &Vec<Token> {
     self.reset();
-    self.code = code.clone(); 
+    self.code = code.clone();
     let chars: Vec<char> = code.chars().collect();
 
     while self.ptr < code.len() {
@@ -201,36 +201,33 @@ impl Tokenizer {
     self.keywords = self.generate_keywords();
   }
 
-    /* Create the keywords */
-    pub fn generate_keywords(&self) -> HashMap<TokenType, String> {
-      let mut keyword_maps: HashMap<TokenType, String> = HashMap::new();
-  
-      /* Defining our keywords here */
-      keyword_maps.insert(TokenType::KW_AND, "ET".to_owned());
-      keyword_maps.insert(TokenType::KW_CASE, "CAS".to_owned());
-      keyword_maps.insert(TokenType::KW_DEFAULT, "AUTRE".to_owned());
-      keyword_maps.insert(TokenType::KW_DO, "FAIRE".to_owned());
-      keyword_maps.insert(TokenType::KW_ELSE, "SINON".to_owned());
-      keyword_maps.insert(TokenType::KW_END, "FIN".to_owned());
-      keyword_maps.insert(TokenType::KW_FOR, "POUR".to_owned());
-      keyword_maps.insert(TokenType::KW_IF, "SI".to_owned());
-      keyword_maps.insert(TokenType::KW_OR, "OU".to_owned());
-      keyword_maps.insert(TokenType::KW_NOT, "NON".to_owned());
-      keyword_maps.insert(TokenType::KW_READ, "LIRE".to_owned());
-      keyword_maps.insert(TokenType::KW_TYPE, "TYPE".to_owned());
-      keyword_maps.insert(TokenType::KW_WHILE, "TANTQUE".to_owned());
-      keyword_maps.insert(TokenType::KW_WRITE, "ECRIRE".to_owned());
-  
-      /* Defining types here */
-      keyword_maps.insert(TokenType::TY_BOOL, "bool".to_owned());
-      keyword_maps.insert(TokenType::TY_INT, "entier".to_owned());
-      keyword_maps.insert(TokenType::TY_REAL, "réel".to_owned());
-      keyword_maps.insert(TokenType::TY_STRING, "chaine".to_owned());
+  /* Create the keywords */
+  pub fn generate_keywords(&self) -> HashMap<TokenType, String> {
+    let keywords: [(TokenType, String); 20] = [
+      (TokenType::KW_AND, "ET".to_string()),
+      (TokenType::KW_CASE, "AUTRE".to_string()),
+      (TokenType::KW_DEFAULT, "AUTRE".to_string()),
+      (TokenType::KW_DO, "FAIRE".to_string()),
+      (TokenType::KW_ELSE, "SINON".to_string()),
+      (TokenType::KW_END, "FIN".to_string()),
+      (TokenType::KW_FOR, "POUR".to_string()),
+      (TokenType::KW_IF, "SI".to_string()),
+      (TokenType::KW_OR, "OU".to_string()),
+      (TokenType::KW_NOT, "NON".to_string()),
+      (TokenType::KW_READ, "LIRE".to_string()),
+      (TokenType::KW_TYPE, "TYPE".to_string()),
+      (TokenType::KW_WHILE, "TANTQUE".to_string()),
+      (TokenType::KW_WRITE, "ECRIRE".to_string()),
+      /* Types */
+      (TokenType::TY_BOOL, "bool".to_string()),
+      (TokenType::TY_INT, "entier".to_string()),
+      (TokenType::TY_REAL, "réel".to_string()),
+      (TokenType::TY_STRING, "chaine".to_string()),
+      /* Type definition headers */
+      (TokenType::DEF_TY_CONSTANTS, "Constantes".to_string()),
+      (TokenType::DEF_TY_VARIABLES, "Variables".to_string()),
+    ];
 
-      /* Defining variable definition */
-      keyword_maps.insert(TokenType::DEF_TY_CONSTANTS, "Constantes".to_owned());
-      keyword_maps.insert(TokenType::DEF_TY_VARIABLES, "Variables".to_owned());
-
-      return keyword_maps;
-    }
+    return HashMap::from(keywords);
+  }
 }

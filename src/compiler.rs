@@ -1,7 +1,7 @@
 mod components;
 use components::{parser::Parser, tokenizer::Tokenizer};
 
-use crate::language_features::Token;
+use crate::language_features::{SyntaxTree, Token};
 use std::{fs, path::Path};
 
 pub struct PseudoCodeCompiler {
@@ -49,13 +49,14 @@ impl PseudoCodeCompiler {
 
   /* Go through the compilation steps */
   fn compile(&mut self, code: String) {
-
     /* Needed for peeking */
     self.code = code.clone();
     let mut tokenizer: Tokenizer = Tokenizer::ini();
-    let tokens: &Vec<Token> = tokenizer.tokenize(&code); 
+    let tokens: &Vec<Token> = tokenizer.tokenize(&code);
 
     let mut parser: Parser = Parser::ini();
-    parser.parse(tokens);
+    let syntax_tree: &SyntaxTree = parser.parse(tokens);
+
+    println!("{:?}", syntax_tree); 
   }
 }

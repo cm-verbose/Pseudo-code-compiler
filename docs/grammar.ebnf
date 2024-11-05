@@ -1,54 +1,77 @@
-# Significant whitespace 
-wsp ::= " "; 
+ws = "U+32";
+nl = "U+0A";
+colon = ":"; 
+comma = ","; 
 
-# Operators
-operator_add ::= "+";
-operator_variable_value ::= "="; 
-operator_substract ::= "-";
-operator_multiply ::= "*";
-operator_divide ::= "/";
-operator_modulo ::= "%";
-operator_greater ::= "<";
-operator_greater_or_equal ::= "<=";
-operator_smaller ::= ">"; 
-operator_smaller_or_equal ::= ">="; 
-operator_assign ::= "<-";
-operator_comma ::= ","; 
-operator_comparative_equal ::= "égale"            # ==
-operator_comparative_not_equal ::= "n'égale pas"; # !=
-operator_colon ::= ":"; 
+  (* Program *)
 
-# Grouping 
-group_paren_left ::= "(";
-group_paren_right ::= ")";
+program 
+  = program_header, program_separator, [program_instructions];
 
-# Keywords
-kw_and ::= "ET";
-kw_do ::= "FAIRE";
-kw_else ::= "SINON";
-kw_for ::= "POUR";
-kw_if ::= "SI";
-kw_if_end ::= "ALORS";
-kw_or ::= "OU";
-kw_not ::= "NOT";
-kw_switch ::= "SELON";
-kw_switch_case ::= "CAS"; 
-kw_switch_default_case ::= "AUTRE"
-kw_read ::= "LIRE";
-kw_while ::= "TANTQUE";
-kw_write ::= "ECRIRE";
-kw_kw_end ::= "FIN";
+  (* program_header *)
 
-# Composed keywords
-kw_if_else ::= kw_else, wsp, kw_if;          # SINON SI
-kw_for_end ::= kw_kw_end, wsp, kw_for;       # FIN POUR 
-kw_switch_end ::= kw_kw_end, wsp, kw_switch; # FIN SELON
-kw_while_end ::= kw_kw_end, wsp, kw_while;   # FIN TANTQUE
+program_header 
+  = (const_decls, var_decls)
+  | (var_decls, const_decls); 
 
+(* constant declarations *)
 
-# Numbers
-digit ::= "0"
-  | "1"
+kw_const_decl = "CONSTANTES" 
+const_decls 
+  = kw_const_decl, colon, nl, [type_declaration];
+
+(* variable declarations *)
+
+kw_var_decl = "VARIABLES" 
+const_decls 
+  = kw_var_decl, colon, nl, [type_declaration];
+
+(* type declarations *)
+
+kw_type = "TYPE" ;
+data_type
+  = "booléen"
+  | "chaine"
+  | "entier"
+  | "réel";
+
+type_declaration
+  = kw_type, ws, data_type, [ws], colon, {(identifier_declaration, comma)};
+
+identifier_declaration
+  = identifier, "=", value; 
+
+identifier
+  = letter, {symbol}; 
+
+letter
+  = ? matches /[a-z]/gi ?;
+
+symbol
+  = ? matches /[^\s]+/g ?;
+
+value
+  = string 
+  | number 
+  | boolean
+
+(* data types *)
+
+string 
+  = '"', string_sequence, '"';
+string_sequence = ? matches /((\\\"|[^\"])+?)/g ?;
+
+boolean 
+  = "VRAI" 
+  | "FAUX"; 
+
+number = 
+  digits | (digits, "," digits); 
+
+digits = digit, [digit]; 
+digits 
+  = "0"
+  | "1
   | "2"
   | "3"
   | "4"
@@ -56,21 +79,43 @@ digit ::= "0"
   | "6"
   | "7"
   | "8"
-  | "9";
+  | "9"; 
 
-number ::= digit digit; 
-float ::= number, ".", number;
+(* program separator *)
+program_separator 
+  = 5 * "_", {"_"};
 
-# Types
-type_integer ::= "entier";
-type_real ::= "réel"; 
-type_string ::= "chaine"; 
-type_boolean ::= "bool"; 
+(* program instructions *)
 
+program_instructions 
+  = {expr};
 
-# Program and variable separation
-program_separator ::= 5 * "_"; 
+expr 
+  = if_expr; 
 
-#
-# Operations 
-#
+(* general keywords *)
+
+expr_end = "FIN"; 
+
+(* conditionnals *)
+
+kw_if = "SI";
+kw_else = "SINON"; 
+kw_then = "ALORS";
+
+if_expr 
+  = if_head, 
+    if_body, 
+    { if_else_head, if_body },
+    { kw_else, nl, if_body }, 
+    ( kw_if, ws, expr_end );
+
+if_head
+  = kw_if, ws, cond_expr, ws, kw_then, nl;
+
+if_body
+  = (stmt)+; 
+
+if_else_head
+  = kw_else, ws, kw_if, cond_expr, kw_then, nl;
+
