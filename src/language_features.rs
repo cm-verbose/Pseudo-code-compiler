@@ -1,4 +1,12 @@
-#[allow(non_camel_case_types)]
+#![allow(non_camel_case_types)]
+
+/*
+
+Lexer
+
+*/
+
+
 #[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
 pub enum TokenType {
   COMMA,
@@ -41,6 +49,10 @@ pub enum TokenType {
   TY_STRING, 
   TY_BOOL, 
 
+  // Type declaration sections
+  DEF_TY_VARIABLES, 
+  DEF_TY_CONSTANTS,
+
   IDENTIFIER,
   NUMBER,
   STRING,
@@ -53,4 +65,26 @@ pub enum TokenType {
 pub struct Token {
   pub content: String,
   pub token_type: TokenType,
+}
+
+/*
+
+Parser
+
+*/
+
+#[derive(Debug)]
+pub enum OperationType {
+  SYMBOL_DECLARATION
+}
+
+#[derive(Debug)]
+pub struct TreeNode {
+  pub operation_type: OperationType,
+  pub children: Vec<TreeNode>, 
+}
+
+#[derive(Debug)]
+pub struct SyntaxTree {
+  pub nodes: Vec<TreeNode>
 }
